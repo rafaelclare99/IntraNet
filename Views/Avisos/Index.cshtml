@@ -1,41 +1,81 @@
 ﻿@model IEnumerable<IntraNet.Models.Avisos>
 
-<h2>Avisos</h2>
+<div class="container mt-4">
 
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="Criar" class="btn btn-primary mb-3">+ Novo Aviso</a>
-}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">
+            <i class="bi bi-megaphone-fill me-2"></i> Avisos
+        </h2>
 
-@foreach (var item in Model)
-{
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5>@item.Titulo</h5>
-
-            <small class="text-muted">
-                @(item.Setor ?? "Geral") • @item.DataCriacao.ToString("dd/MM/yyyy HH:mm")
-            </small>
-
-            <p class="mt-2">@item.Mensagem</p>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="mt-2">
-                    <a asp-action="Editar"
-                       asp-route-id="@item.AvisosId"
-                       class="btn btn-warning btn-sm">
-                        Editar
-                    </a>
-
-                    <a asp-action="Excluir"
-                       asp-route-id="@item.AvisosId"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Deseja excluir este aviso?');">
-                        Excluir
-                    </a>
-                </div>
-            }
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Criar" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Novo Aviso
+            </a>
+        }
     </div>
-}
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            Nenhum aviso disponível no momento.
+        </div>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <div class="card mb-3 shadow-sm border-0">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title fw-semibold mb-1">
+                                @item.Titulo
+                            </h5>
+
+                            <small class="text-muted">
+                                <i class="bi bi-building me-1"></i>
+                                @(item.Setor ?? "Geral")
+                                &nbsp;•&nbsp;
+                                <i class="bi bi-clock me-1"></i>
+                                @item.DataCriacao.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </div>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <span class="badge bg-secondary">
+                                Admin
+                            </span>
+                        }
+                    </div>
+
+                    <hr class="my-3" />
+
+                    <p class="card-text">
+                        @item.Mensagem
+                    </p>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="d-flex gap-2 mt-3">
+                            <a asp-action="Editar"
+                               asp-route-id="@item.AvisosId"
+                               class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-pencil-square me-1"></i> Editar
+                            </a>
+
+                            <a asp-action="Excluir"
+                               asp-route-id="@item.AvisosId"
+                               class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('Deseja excluir este aviso?');">
+                                <i class="bi bi-trash me-1"></i> Excluir
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

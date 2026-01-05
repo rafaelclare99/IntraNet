@@ -38,6 +38,12 @@ public class ProcessosController : Controller
         return View(processos);
     }
 
+    [Authorize(Roles = "Admin")]
+    public IActionResult Criar()
+    {
+        return View("Criar");
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Criar(Processo processo, IFormFile arquivo)
