@@ -5,16 +5,10 @@ namespace IntraNet.Models
     public class Avisos
     {
         public int AvisosId { get; set; }
-
-        [Required]
-        [StringLength(120)]
-        public string Titulo { get; set; } = string.Empty;
-
-        [Required]
-        public string Conteudo { get; set; } = string.Empty;
-
-        public DateTime DataPublicacao { get; set; } = DateTime.Now;
-
-        public string Autor { get; set; } = string.Empty;
+        public string Titulo { get; set; } = "";
+        public string Mensagem { get; set; } = "";
+        public DateTime DataCriacao { get; set; } = DateTime.Now;
+        public string Setor { get; set; } // null = geral
+        public string AutorId { get; set; } = "";
     }
 }

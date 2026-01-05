@@ -1,0 +1,21 @@
+﻿@model List<IntraNet.Models.Avisos>
+
+<h2>Avisos</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Criar" class="btn btn-primary mb-3">+ Novo Aviso</a>
+}
+
+@foreach (var aviso in Model)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>@aviso.Titulo</h5>
+            <small class="text-muted">
+                @(aviso.Setor ?? "Geral") • @aviso.DataCriacao.ToString("dd/MM/yyyy HH:mm")
+            </small>
+            <p class="mt-2">@aviso.Mensagem</p>
+        </div>
+    </div>
+}

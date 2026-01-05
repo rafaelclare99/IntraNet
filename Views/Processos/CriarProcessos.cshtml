@@ -1,0 +1,43 @@
+﻿@model IntraNet.Models.Processo
+
+@{
+    ViewData["Title"] = "Criar Processo";
+}
+
+<h2>Criar Novo Processo</h2>
+
+<form asp-action="Criar" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input asp-for="Titulo" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <textarea asp-for="Descricao" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Setor</label>
+        <select asp-for="Setor" class="form-select" required>
+            <option value="">Selecione</option>
+            <option value="NOC">NOC</option>
+            <option value="Suporte">Suporte</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Comercial">Comercial</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Arquivo (opcional)</label>
+        <input type="file" name="arquivo" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Salvar Processo
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary ms-2">
+        Cancelar
+    </a>
+</form>

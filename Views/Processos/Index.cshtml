@@ -1,0 +1,53 @@
+﻿@model List<IntraNet.Models.Processo>
+
+@{
+    ViewData["Title"] = "Processos";
+}
+
+<h2 class="mb-4">Processos do Setor</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Criar" class="btn btn-primary mb-3">
+        + Novo Processo
+    </a>
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var processo in Model)
+        {
+            <div class="col-md-6">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@processo.Titulo</h5>
+
+                        <p class="text-muted mb-1">
+                            Setor: <strong>@processo.Setor</strong>
+                        </p>
+
+                        <p class="card-text">
+                            @processo.Descricao
+                        </p>
+
+                        @if (!string.IsNullOrEmpty(processo.ArquivoPath))
+                        {
+                            <a href="@Url.Content("~/uploads/" + processo.ArquivoPath)"
+                               target="_blank"
+                               class="btn btn-outline-secondary btn-sm">
+                                📎 Baixar arquivo
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        Nenhum processo cadastrado para este setor.
+    </div>
+}

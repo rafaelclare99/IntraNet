@@ -1,15 +1,19 @@
 using System.Diagnostics;
 using IntraNet.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IntraNet.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize]   
         public IActionResult Index()
-        {
-            return View();
-        }
+            {
+                return View();
+            }
+        
 
         public IActionResult Privacy()
         {
