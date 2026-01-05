@@ -17,21 +17,26 @@ public class AvisosController : Controller
         _userManager = userManager;
     }
 
-    // Todos veem (geral + setor do usuário)
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
-        var role = (await _userManager.GetRolesAsync(user!)).FirstOrDefault();
+        var roles = await _userManager.GetRolesAsync(user!);
+        var setor = roles.FirstOrDefault();
 
-        var avisos = await _context.Avisos
-            .Where(a => a.Setor == null || a.Setor == role)
+        IQueryable<Avisos> query = _context.Avisos;
+
+        if (!User.IsInRole("Admin"))
+        {
+            query = query.Where(a => a.Setor == null || a.Setor == setor);
+        }
+
+        var avisos = await query
             .OrderByDescending(a => a.DataCriacao)
             .ToListAsync();
 
         return View(avisos);
     }
 
-    // Apenas Admin cria
     [Authorize(Roles = "Admin")]
     public IActionResult Criar()
     {
@@ -43,7 +48,7 @@ public class AvisosController : Controller
     public async Task<IActionResult> Criar(Avisos aviso)
     {
         if (!ModelState.IsValid)
-            return View(aviso);
+            return View("CriarAvisos", aviso);
 
         aviso.AutorId = _userManager.GetUserId(User)!;
         aviso.DataCriacao = DateTime.Now;

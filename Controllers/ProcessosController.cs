@@ -22,10 +22,21 @@ public class ProcessosController : Controller
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
-        var role = (await _userManager.GetRolesAsync(user!)).FirstOrDefault();
+        var roles = await _userManager.GetRolesAsync(user!);
+        var setor = roles.FirstOrDefault();
 
-        var processos = await _context.Processos
-            .Where(p => p.Setor == role)
+        IQueryable<Processo> query = _context.Processos;
+
+        // 🔐 Admin vê tudo
+        if (!User.IsInRole("Admin"))
+        {
+            query = query.Where(p => p.Setor == setor);
+            // se quiser permitir processos gerais:
+            // query = query.Where(p => p.Setor == null || p.Setor == setor);
+        }
+
+        var processos = await query
+            .OrderByDescending(p => p.DataCriacao)
             .ToListAsync();
 
         return View(processos);
