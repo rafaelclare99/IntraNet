@@ -23,4 +23,7 @@ jobs:
         run: sudo chown -R noc:noc /home/intranet/publish
 
       - name: Restart serviço Intranet
-        run: sudo systemctl restart intranet.service
+        run: | 
+        sudo systemctl restart intranet.service  
+        sleep 3
+        sudo systemctl is-active intranet.service
