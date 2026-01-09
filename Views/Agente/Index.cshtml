@@ -1,41 +1,108 @@
 ﻿@model IEnumerable<ApplicationUser>
 
-<h2>Painel de Agentes</h2>
+@{
+    ViewData["Title"] = "Painel de Agentes";
+}
 
-<a asp-action="Create" class="btn btn-primary">Novo Agente</a>
+<div class="container mt-4">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Setor</th>
-            <th>Ativo</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var a in Model)
-        {
-            <tr>
-                <td>@a.Nome</td>
-                <td>@a.Email</td>
-                <td>@a.Setor</td>
-                <td>@(a.Ativo ? "Sim" : "Não")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@a.Id">Editar</a> |
-                    <button onclick="confirmar('@a.Id')">Excluir</button>
-                </td>
-            </tr>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">
+            <i class="bi bi-people-fill"></i> Painel de Agentes
+        </h3>
+
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill"></i> Novo Agente
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Setor</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Nenhum agente cadastrado.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var a in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@a.Nome</td>
+
+                                <td>@a.Email</td>
+
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        @a.Setor
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (a.Ativo)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Ativo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> Inativo
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="text-end">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@a.Id"
+                                       class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            onclick="confirmarExclusao('@a.Id', '@a.Nome')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmarExclusao(id, nome) {
+            if (confirm(`Deseja realmente excluir o agente "${nome}"?`)) {
+                fetch(`/Agente/Delete?id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken':
+                            document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    }
+                }).then(() => location.reload());
+            }
         }
-    </tbody>
-</table>
-
-<script>
-    function confirmar(id) {
-        if (confirm("Tem certeza que deseja excluir este agente?")) {
-            fetch('/Agente/Delete?id=' + id, { method: 'POST' })
-                .then(() => location.reload());
-        }
-    }
-</script>
+    </script>
+}
