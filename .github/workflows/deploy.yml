@@ -27,3 +27,4 @@ jobs:
         sudo systemctl restart intranet.service  
         sleep 3
         sudo systemctl is-active intranet.service
+        
